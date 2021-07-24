@@ -48,6 +48,17 @@ const testArr = [
     ];
  */
 
+// Use String.raw for strings passed to new reg.
+function process(reg, str, template) {
+    // const m = /hello|hi\s+([^\s]+)/g.exec(str);
+    const m = reg.exec(str);
+    for(let i = 1; i < m.length; i++) {
+        console.log(i);
+        template = template.replace(`%${i}`, m[i]);
+    }
+    return template;
+}
+
 /**
  *  @description A simple example of nlp functions for building chatbots
  *
@@ -74,7 +85,7 @@ class Simple_Nlp {
     }
 
     addAnswer(marker, answer) {
-        if(!this.__Answers[marker]) throw Error(`Sorry '${marker} does not exist`);
+        if(!this.__Answers[marker]) throw new Error(`Sorry '${marker} does not exist`);
         this.__Answers[marker].push(answer);
     }
 
