@@ -4,33 +4,7 @@
  * @todo make this usuable in the browser i.e remove required.
  */
 
-const readline = require("readline");
-const chalk = require("chalk");
-
-const prompt = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 // Utilities
-function input(self, str = "> ") {
-    prompt.question(str, (value) => {
-        const result = self.process(value);
-        if(result.answer) {
-            process.stdout.write(chalk.yellow(result.answer) + "\n");
-            if(value.includes("bye")) {
-                prompt.close();
-                process.exit();
-            }
-            input(self, str);
-        } else {
-            process.stdout.write("Sorry please could you rephrase that?" + "\n");
-            input(self, str);
-        }
-    });
-    // prompt.close();
-}
-
 function randomBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -122,8 +96,38 @@ class Simple_Nlp {
         return result;
     }
 
-    converse() {
-        input(this);
+    converse(fn) {
+        if(process) {
+            const readline = require("readline");
+            const chalk = require("chalk");
+
+            const prompt = readline.createInterface({
+                input: process.stdin,
+                output: process.stdout
+            });
+            // Input definition
+            function input(self, str = "> ") {
+                prompt.question(str, (value) => {
+                    const result = self.process(value);
+                    if(result.answer) {
+                        process.stdout.write(chalk.yellow(result.answer) + "\n");
+                        if(value.includes("bye")) {
+                            prompt.close();
+                            process.exit();
+                        }
+                        input(self, str);
+                    } else {
+                        process.stdout.write("Sorry please could you rephrase that?" + "\n");
+                        input(self, str);
+                    }
+                });
+                // prompt.close();
+            }
+            // Start conversation
+            fn ? fn(this) : input(this);
+        } else {
+            fn();
+        }
     }
 }
 

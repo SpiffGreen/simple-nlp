@@ -1,3 +1,5 @@
-const bot = require("./training");
-console.log("Hello I'm Bujo. Let's Talk :)");
-bot.converse();
+/**
+ * @name Simple-nlp
+ * @description A simple tool used to make rule based bots
+ */
+module.exports = require("./simple-nlp");
