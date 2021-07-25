@@ -1,3 +1,9 @@
+"use strict";
+
+/**
+ * @todo make this usuable in the browser i.e remove required.
+ */
+
 const readline = require("readline");
 const chalk = require("chalk");
 
@@ -48,15 +54,14 @@ const testArr = [
     ];
  */
 
-// Use String.raw for strings passed to new reg.
-function process(reg, str, template) {
-    // const m = /hello|hi\s+([^\s]+)/g.exec(str);
-    const m = reg.exec(str);
-    for(let i = 1; i < m.length; i++) {
-        console.log(i);
-        template = template.replace(`%${i}`, m[i]);
-    }
-    return template;
+function processData(match, templates) {
+    const newTemp = templates.map(template => {
+        for(let i = 1; i < match.length; i++) {
+            template = template.replace(`%${i}`, match[i]);
+        }
+        return template;
+    });
+    return newTemp;
 }
 
 /**
@@ -79,6 +84,7 @@ class Simple_Nlp {
         this.converse = this.converse.bind(this);
     }
 
+    // Use String.raw to create string using
     addRule(rule, marker) {
         this.__Markers[marker] ? this.__Markers[marker] += `|${rule}` : this.__Markers[marker] = rule;
         if(!this.__Answers[marker]) this.__Answers[marker] = Array();
@@ -95,16 +101,20 @@ class Simple_Nlp {
         }
     }
 
+    /**
+     * @todo    Add formatted output
+     */
     process(str) {
         const result = Object.create(null);
         result.utterance = str;
         result.possibleAnswers = Array();
         result.classifications = Object.create(null);
         for(let marker in this.__Rules) {
-            let match = str.match(this.__Rules[marker]);
+            // let match = str.match(this.__Rules[marker]);
+            let match = this.__Rules[marker].exec(str);
             if(match) {
                 result.classifications[marker] = match;
-                result.possibleAnswers.push(this.__Answers[marker])
+                result.possibleAnswers.push(processData(match, this.__Answers[marker]))
             }
         }
         result.possibleAnswers = flattenArray(result.possibleAnswers);
@@ -118,4 +128,7 @@ class Simple_Nlp {
 }
 
 const nlp = new Simple_Nlp();
-module.exports = nlp;
+module.exports = {
+    bot: nlp,
+    r: String.raw
+};

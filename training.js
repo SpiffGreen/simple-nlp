@@ -1,7 +1,8 @@
-const bot = require("./simple-nlp");
+const {bot, r} = require("./simple-nlp");
+// console.log(r);
 
 // Possible questions
-bot.addRule("hi", "greeting.hi");
+// bot.addRule('hi', "greeting.hi");
 bot.addRule("hey", "greeting.hi");
 bot.addRule("hello", "greeting.hi");
 bot.addRule("how are you", "ask.about");
@@ -17,8 +18,8 @@ bot.addRule("sorry", "answer.plead");
 
 bot.addRule("order", "business.order");
 bot.addRule("purchase", "business.order");
-bot.addRule("i want", "business.order");
-bot.addRule("i need", "business.order");
+bot.addRule(r`i want ([^\s]+)`, "business.order");
+bot.addRule(r`i need ([^\s]+)`, "business.order");
 bot.addRule("Menu", "business.menu");
 bot.addRule("List", "business.menu");
 bot.addRule("Products", "business.menu");
@@ -39,7 +40,12 @@ bot.addAnswer("answer.plead", "It's all good.");
 
 bot.addAnswer("business.order", "You want to place an order, Contact +234 701 0990 0405");
 bot.addAnswer("business.order", "You want to make a purchase, Contact +234 701 0990 0405");
+bot.addAnswer("business.order", "Your order for %1 has been placed. :)")
 bot.addAnswer("business.menu", "We sell eggs, milk, chickens, chicken feed, fish, etc");
+
+// Test
+bot.addRule(r`my name is ([^\s]+)`, "intro.name");
+bot.addAnswer("intro.name", "Hello %1");
 
 // Train bot
 bot.train();
