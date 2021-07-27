@@ -1,7 +1,7 @@
 {
-  "name": "chatbot-test",
+  "name": "simple-nlp",
   "version": "1.0.0",
-  "description": "A simple regex based Q&A bot library",
+  "description": "A simple rule-based Q&A bot library",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
